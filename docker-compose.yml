@@ -12,7 +12,10 @@ services:
       - db
 
   db:
-    image: mysql:5.7.22
+    build:
+      context: .
+      dockerfile: Dockerfile_mysql
+    image: mysql:8.0
     restart: always
     environment:
       MYSQL_DATABASE: main
@@ -23,6 +26,7 @@ services:
       - .dbdate:/var/lib/mysql
     ports:
       - 3306:3306
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   front:
     build:
