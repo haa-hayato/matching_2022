@@ -13,6 +13,9 @@ class User(models.Model):
 class Tag(models.Model):
     name = models.CharField(verbose_name='タグ名', max_length=32, unique=True)
 
+    def __str__(self):
+        return self.name
+
 class UserTagRelation(models.Model):
     user_id = models.ForeignKey(
         User,
@@ -36,6 +39,22 @@ class LikeRelation(models.Model):
         related_name='liked_user'
 
     )
+
+class ShowRelation(models.Model):
+    show_user = models.ForeignKey( #表示したユーザー
+        User,
+        on_delete=models.CASCADE,
+        related_name='show_user'
+
+    )
+    showed_user = models.ForeignKey( #表示されたユーザー
+        User,
+        on_delete=models.CASCADE,
+        related_name='showed_user'
+
+    )
+
+
 
 
 

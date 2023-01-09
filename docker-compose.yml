@@ -18,10 +18,10 @@ services:
     image: mysql:8.0
     restart: always
     environment:
+      MYSQL_ROOT_PASSWORD: rootpw
       MYSQL_DATABASE: main
-      MYSQL_USER: root
+      MYSQL_USER: user
       MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: password
     volumes:
       - .dbdate:/var/lib/mysql
     ports:
