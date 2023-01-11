@@ -13,11 +13,29 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 class ListRecommendedUsers(APIView):
     def get(self, request, format=None):
         hoge = Tag.objects.all()
         # userId = request.query_params.get('userId')
         return Response(hoge)
+
+@api_view(["POST"])
+def signIn(request):
+    if request.method == "POST":
+        body = request.data #{email: string, password: string}
+        userInfo = UserSerializer(User.objects.filter(email=body['email']), many=True).data
+        if len(userInfo) > 0 and body["password"] == userInfo[0]['password']:
+            return Response({"isLogin": True, "userId": userInfo[0]['id']})
+        else:
+            return Response({"isLogin": False, "userId": None})
+
+        
+        
+    
 
 @api_view(["GET"])
 def getRecommendUserList(request, userId):

@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, validators
 from .models import User, Tag, UserTagRelation, LikeRelation, ShowRelation
 
 class TagSerializer(serializers.ModelSerializer):
@@ -15,10 +15,12 @@ class UserTagRelationSerializer(serializers.ModelSerializer):
         read_only_fields=('id',)
 
 class UserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(validators=[validators.UniqueValidator(queryset=User.objects.all(), message='登録済みのメールアドレスです')])
+
     class Meta:
         model = User
-        fields = ('id', 'name',)
-        read_only_fields=('email', 'password',)
+        fields = ('id', 'name', 'email', 'password',)
+        
 
 class ShowRelationSerializer(serializers.ModelSerializer):
     class Meta:
