@@ -17,7 +17,8 @@ import WhatshotOutlinedIcon from "@mui/icons-material/WhatshotOutlined";
 import { teal } from "@mui/material/colors";
 
 export const SignInPage = () => {
-  const { isProcessing, setValue, signIn, signUp } = useSignIn();
+  const { isProcessing, setSignInValue, signIn, signUp, setSignUpValue } =
+    useSignIn();
   const [flag, setFlag] = useState<boolean>(true);
   return (
     <div>
@@ -53,7 +54,7 @@ export const SignInPage = () => {
               variant="standard"
               fullWidth
               required
-              onChange={(val) => setValue("email", val.target.value)}
+              onChange={(val) => setSignInValue("email", val.target.value)}
             />
             <TextField
               type="password"
@@ -61,7 +62,7 @@ export const SignInPage = () => {
               variant="standard"
               fullWidth
               required
-              onChange={(val) => setValue("password", val.target.value)}
+              onChange={(val) => setSignInValue("password", val.target.value)}
             />
             {/* ラベルとチェックボックス */}
             <Box mt={3}>
@@ -114,13 +115,27 @@ export const SignInPage = () => {
                 Sign Up
               </Typography>
             </Grid>
-            <TextField label="Email" variant="standard" fullWidth required />
+            <TextField
+              label="UserName"
+              variant="standard"
+              fullWidth
+              required
+              onChange={(val) => setSignUpValue("name", val.target.value)}
+            />
+            <TextField
+              label="Email"
+              variant="standard"
+              fullWidth
+              required
+              onChange={(val) => setSignUpValue("email", val.target.value)}
+            />
             <TextField
               type="password"
               label="Password"
               variant="standard"
               fullWidth
               required
+              onChange={(val) => setSignUpValue("password", val.target.value)}
             />
             {/* ラベルとチェックボックス */}
             <Box mt={3}>

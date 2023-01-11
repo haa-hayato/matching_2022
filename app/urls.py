@@ -1,7 +1,7 @@
 from django_react.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views import testFunc, ListRecommendedUsers, getRecommendUserList, signIn
+from .views import testFunc, ListRecommendedUsers, getRecommendUserList, signIn, validateEmail, signUp
 
 router = DefaultRouter()
 router.register('tags', views.TagViewSet)
@@ -14,5 +14,7 @@ urlpatterns = [
     # path('aaa/<slug:userId>/', ListRecommendedUsers.as_view())
     path('aaa/', ListRecommendedUsers.as_view()),
     path("recommend/<int:userId>/", getRecommendUserList, name="おすすめユーザー取得"),
-    path('signin/', signIn, name='サインイン' )
+    path('signin/', signIn, name='サインイン' ),
+    path('validate-email/', validateEmail, name="メールアドレス重複確認"),
+    path('signup/', signUp, name='サインアップ'),
 ]

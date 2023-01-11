@@ -33,6 +33,25 @@ def signIn(request):
         else:
             return Response({"isLogin": False, "userId": None})
 
+@api_view(["POST"])
+def signUp(request):
+    if request.method == "POST":
+        body = request.data #{email: string, password: string, name: string}
+        User.objects.create(name=body["name"], email=body["email"], password=body["password"])
+        userInfo = UserSerializer(User.objects.filter(email=body['email']), many=True).data
+        return Response({"userId": userInfo[0]["id"]})
+
+@api_view(["POST"])
+def validateEmail(request):
+    if request.method == "POST":
+        body = request.data #{email: string}
+        userInfo = UserSerializer(User.objects.filter(email=body['email']), many=True).data
+        if len(userInfo) < 1:
+            return Response({"result": True})
+        else:
+            return Response({"result": False})
+        
+
         
         
     
