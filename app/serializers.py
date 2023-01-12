@@ -14,6 +14,12 @@ class UserTagRelationSerializer(serializers.ModelSerializer):
         fields = ('tag_id', 'user_id',)
         read_only_fields=('id',)
 
+class UserTagRelationSerializer2(serializers.ModelSerializer):
+    class Meta:
+        model = UserTagRelation
+        fields = ('tag_id', 'user_id',)
+        read_only_fields=('id',)
+
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(validators=[validators.UniqueValidator(queryset=User.objects.all(), message='登録済みのメールアドレスです')])
 

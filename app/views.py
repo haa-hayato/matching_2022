@@ -3,7 +3,7 @@ from rest_framework import generics, permissions, viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import TagSerializer, UserTagRelationSerializer, UserSerializer, ShowRelationSerializer
+from .serializers import TagSerializer, UserTagRelationSerializer, UserSerializer, ShowRelationSerializer, UserTagRelationSerializer2
 from .models import Tag, User, LikeRelation, UserTagRelation, ShowRelation
 from pymagnitude import Magnitude
 
@@ -17,11 +17,33 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class UserTagRelationViewSet(viewsets.ModelViewSet):
+    queryset = UserTagRelation.objects.all()
+    serializer_class = UserTagRelationSerializer2
+
 class ListRecommendedUsers(APIView):
     def get(self, request, format=None):
         hoge = Tag.objects.all()
         # userId = request.query_params.get('userId')
         return Response(hoge)
+
+@api_view(["DELETE"])
+def deleteTag(request, tagId, userId):
+    if request.method == "DELETE":
+        targetUserTagRelation = UserTagRelation.objects.filter(tag_id=tagId, user_id=userId)
+        targetUserTagRelation.delete()
+        return Response("user-tag deleted")
+
+@api_view(["POST"])
+def createTagWithUserId(request):
+    if request.method == "POST":
+        body = request.data #{name: string, userId: number}
+        Tag.objects.create(name=body["name"])
+        createdTag = TagSerializer(Tag.objects.filter(name=body["name"]), many = True).data
+        tag = TagSerializer(Tag.objects.get(pk=createdTag[0]["id"])).instance
+        user = UserSerializer(User.objects.get(pk=body["userId"])).instance
+        UserTagRelation.objects.create(user_id=user, tag_id=tag)
+        return Response({"sucsess": True})
 
 @api_view(["POST"])
 def signIn(request):
@@ -50,7 +72,21 @@ def validateEmail(request):
             return Response({"result": True})
         else:
             return Response({"result": False})
+
+@api_view(["GET"])
+def getUserTagList(request, userId):
+    if request.method == "GET":
+        userTags =  UserTagRelationSerializer2(UserTagRelation.objects.filter(user_id=userId), many=True).data
+        userTagIdList = [] 
+        for tag in userTags:
+            userTagIdList.append(tag["tag_id"])
         
+
+        userTagList = TagSerializer(Tag.objects.filter(id__in = userTagIdList), many=True).data
+
+        #userTags = UserTagRelationSerializer(UserTagRelation.objects.select_related("tag_id").filter(user_id=userId), many=True).data
+
+        return Response(userTagList)
 
         
         
