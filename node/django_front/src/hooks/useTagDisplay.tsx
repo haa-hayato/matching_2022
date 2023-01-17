@@ -10,6 +10,7 @@ interface ChipData {
   key: number;
   label: string;
   tagId: number;
+  similar?: boolean;
 }
 
 const ListItem = styled("li")(({ theme }) => ({
@@ -18,7 +19,7 @@ const ListItem = styled("li")(({ theme }) => ({
 
 export const useTagDisplay = () => {
   const [chipData, setChipData] = useState<
-    { key: number; label: string; tagId: number }[]
+    { key: number; label: string; tagId: number; similar?: boolean }[]
   >([]);
 
   const handleDelete = (chipToDelete: ChipData) => async () => {
@@ -52,15 +53,29 @@ export const useTagDisplay = () => {
             icon = <TagFacesIcon />;
           }
 
-          return (
-            <ListItem key={data.key}>
-              <Chip
-                icon={icon}
-                label={data.label}
-                onDelete={handleDelete(data)}
-              />
-            </ListItem>
-          );
+          if (data.similar == true) {
+            return (
+              <ListItem key={data.key}>
+                <Chip icon={icon} label={data.label} color="success" />
+              </ListItem>
+            );
+          } else if (data.similar == false) {
+            return (
+              <ListItem key={data.key}>
+                <Chip icon={icon} label={data.label} />
+              </ListItem>
+            );
+          } else {
+            return (
+              <ListItem key={data.key}>
+                <Chip
+                  icon={icon}
+                  label={data.label}
+                  onDelete={handleDelete(data)}
+                />
+              </ListItem>
+            );
+          }
         })}
       </Paper>
     );

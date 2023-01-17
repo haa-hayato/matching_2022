@@ -27,12 +27,42 @@ class ListRecommendedUsers(APIView):
         # userId = request.query_params.get('userId')
         return Response(hoge)
 
+@api_view(["POST"])
+def similarWord(request):
+    if request.method == "POST":
+         # chiVeデータのPATH
+        model_path = "django_react/downloads/chive-1.2-mc30.magnitude"
+        # モデルの読み込み
+        wv = Magnitude(model_path)
+        body = request.data #{word: string}
+        similarWords = wv.most_similar(body["word"], topn=25)
+        return Response(similarWords)
+
+
+@api_view(["POST"])
+def likeUser(request):
+    if request.method == "POST":
+        body = request.data #{userId: number, targetUserId: number}
+        showUser = UserSerializer(User.objects.get(pk=body['targetUserId'])).instance
+        showedUser = UserSerializer(User.objects.get(pk=body['userId'])).instance 
+        ShowRelation.objects.create(show_user=showUser, showed_user=showedUser)
+        return Response({"message":"user liked"})
+
+@api_view(["POST"])
+def dislikeUser(request):
+    if request.method == "POST":
+        body = request.data #{userId: number, targetUserId: number}
+        showUser = UserSerializer(User.objects.get(pk=body['targetUserId'])).instance
+        showedUser = UserSerializer(User.objects.get(pk=body['userId'])).instance 
+        ShowRelation.objects.create(show_user=showUser, showed_user=showedUser)
+        return Response({"message":"user disliked"})
+
 @api_view(["DELETE"])
 def deleteTag(request, tagId, userId):
     if request.method == "DELETE":
         targetUserTagRelation = UserTagRelation.objects.filter(tag_id=tagId, user_id=userId)
         targetUserTagRelation.delete()
-        return Response("user-tag deleted")
+        return Response({"message":"user-tag deleted"})
 
 @api_view(["POST"])
 def createTagWithUserId(request):
@@ -103,7 +133,7 @@ def getRecommendUserList(request, userId):
         minShowNumber = 10
 
          # chiVeデータのPATH
-        model_path = "django_react/downloads/chive-1.2-mc90.magnitude"
+        model_path = "django_react/downloads/chive-1.2-mc30.magnitude"
         # モデルの読み込み
         wv = Magnitude(model_path)
 
@@ -126,7 +156,7 @@ def getRecommendUserList(request, userId):
 
         similarTagList = [] #類似かつ存在するタグ名のリスト
         for tag in userTagList:
-            similarWords = wv.most_similar(tag, topn=7)
+            similarWords = wv.most_similar(tag, topn=25)
             similarTagList.append(tag) #検索しているユーザーが持つタグも追加
             for word in similarWords:
                 if word[0] in allTagList:
@@ -185,13 +215,13 @@ def getRecommendUserList(request, userId):
                 recommendUserInfoList.append(rUserInfo)
             
 
-        def postShowRelation(showedUserId, showUserInfoList): #表示したユーザー、表示されたユーザーの関係をshowRelationテーブルに反映
-            for userInfo in showUserInfoList:
-                showUser = UserSerializer(User.objects.get(pk=userInfo['id'])).instance
-                showedUser = UserSerializer(User.objects.get(pk=showedUserId)).instance 
-                ShowRelation.objects.create(show_user=showUser, showed_user=showedUser)
+        # def postShowRelation(showedUserId, showUserInfoList): #表示したユーザー、表示されたユーザーの関係をshowRelationテーブルに反映
+        #     for userInfo in showUserInfoList:
+        #         showUser = UserSerializer(User.objects.get(pk=userInfo['id'])).instance
+        #         showedUser = UserSerializer(User.objects.get(pk=showedUserId)).instance 
+        #         ShowRelation.objects.create(show_user=showUser, showed_user=showedUser)
 
-        postShowRelation(userId, recommendUserInfoList)
+        # postShowRelation(userId, recommendUserInfoList)
 
         return Response(recommendUserInfoList)
 

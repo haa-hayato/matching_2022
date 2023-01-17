@@ -1,7 +1,7 @@
 from django_react.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views import testFunc, ListRecommendedUsers, getRecommendUserList, signIn, validateEmail, signUp, getUserTagList, createTagWithUserId, deleteTag
+from .views import testFunc, ListRecommendedUsers, getRecommendUserList, signIn, validateEmail, signUp, getUserTagList, createTagWithUserId, deleteTag, likeUser, dislikeUser, similarWord
 router = DefaultRouter()
 router.register('tags', views.TagViewSet)
 router.register('users', views.UserViewSet)
@@ -19,5 +19,9 @@ urlpatterns = [
     path('signup/', signUp, name='サインアップ'),
     path("user-tags/<int:userId>/", getUserTagList, name="ユーザータグ取得"),
     path('create-tag-with-user/', createTagWithUserId, name='タグ新規作成(要ユーザーid)'),
-    path('delete-user-tag/<int:userId>/<int:tagId>/', deleteTag, name='ユーザー登録タグ削除')
+    path('delete-user-tag/<int:userId>/<int:tagId>/', deleteTag, name='ユーザー登録タグ削除'),
+    path("like/", likeUser, name="いいね"),
+    path("dislike/", dislikeUser, name="悪い"),
+    path("similar-word/", similarWord, name="類義語検索")
+    
 ]

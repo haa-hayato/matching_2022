@@ -16,12 +16,18 @@ export const useCheckSignIn = () => {
       .get(`http://localhost:8000/app/users/${userId}/`)
       .then((res) => res.data)
       .catch((err) => console.log("err", err));
+
+    if (!sessionStorage.getItem("id")) {
+      navigate("/");
+      return;
+    }
     if (!!response) {
       setUserId(Number(sessionStorage.getItem("id")));
       return;
     } else {
       sessionStorage.removeItem("id");
       navigate("/");
+      return;
     }
   };
   return {

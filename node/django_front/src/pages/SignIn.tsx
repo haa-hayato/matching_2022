@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSignIn } from "../hooks/useSignIn";
 import {
   Avatar,
@@ -17,6 +17,9 @@ export const SignInPage = () => {
   const { isProcessing, setSignInValue, signIn, signUp, setSignUpValue } =
     useSignIn();
   const [flag, setFlag] = useState<boolean>(true);
+  useEffect(() => {
+    sessionStorage.clear();
+  }, []);
   return (
     <div>
       {flag ? (

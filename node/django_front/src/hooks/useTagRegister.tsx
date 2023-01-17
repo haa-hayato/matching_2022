@@ -108,7 +108,7 @@ export const useTagRegister = () => {
             p: 4,
             height: "70vh",
             width: "700px",
-            m: "140px auto",
+            m: "10px auto",
           }}
         >
           <Grid
@@ -133,7 +133,7 @@ export const useTagRegister = () => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="趣味タグ登録"
+                      label="趣味タグ"
                       InputProps={{
                         ...params.InputProps,
                         type: "search",
@@ -161,5 +161,6 @@ export const useTagRegister = () => {
   };
   return {
     render,
+    allUserTags,
   };
 };
