@@ -36,6 +36,9 @@ def similarWord(request):
         wv = Magnitude(model_path)
         body = request.data #{word: string}
         similarWords = wv.most_similar(body["word"], topn=25)
+
+        # vectors = Magnitude("https://sudachi.s3-ap-northeast-1.amazonaws.com/chive/chive-1.1-mc90-aunit.magnitude", stream=True)
+        # test = vectors.most_similar("徳島", topn=10)# ローカルにファイルをダウンロードせず、ベクトルをすばやく取得
         return Response(similarWords)
 
 
@@ -207,6 +210,9 @@ def getRecommendUserList(request, userId):
                 
                 for user in additionalUsers:
                     recommendUserInfoList.append(getUserInfo(user['id'], []))
+            else: #10人以上の時、多い分を削除
+                del recommendUserInfoList[-(len(recommendUserInfoList) - minShowNumber):]
+
         else:
             randomUsers = UserSerializer(User.objects.exclude(id__in=excludeUserIdList)[:10], many=True).data
 
