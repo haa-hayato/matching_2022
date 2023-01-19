@@ -30,7 +30,7 @@ export const SignInPage = () => {
               p: 4,
               height: "70vh",
               width: "280px",
-              m: "20px auto",
+              m: "60px auto",
             }}
           >
             <Grid
@@ -96,7 +96,7 @@ export const SignInPage = () => {
               p: 4,
               height: "70vh",
               width: "280px",
-              m: "20px auto",
+              m: "60px auto",
             }}
           >
             <Grid
